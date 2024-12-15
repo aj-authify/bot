@@ -15,6 +15,8 @@ TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", handler.start))
+app.add_handler(CommandHandler("verify", handler.verify))
+app.add_handler(MessageHandler(filters.TEXT, handler.website))
 app.add_handler(MessageHandler(filters.CONTACT, handler.contact))
 
 app.run_polling()
