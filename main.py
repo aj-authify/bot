@@ -1,5 +1,7 @@
 import os
+from flask import Flask, request
 from dotenv import load_dotenv
+from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -8,15 +10,31 @@ from telegram.ext import (
 )
 import handler
 
-
 load_dotenv()
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
-app = ApplicationBuilder().token(TOKEN).build()
+bot = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
-app.add_handler(CommandHandler("start", handler.start))
-app.add_handler(CommandHandler("verify", handler.verify))
-app.add_handler(MessageHandler(filters.TEXT, handler.website))
-app.add_handler(MessageHandler(filters.CONTACT, handler.contact))
+bot.add_handler(CommandHandler("start", handler.start))
+bot.add_handler(CommandHandler("verify", handler.verify))
+bot.add_handler(MessageHandler(filters.TEXT, handler.website))
+bot.add_handler(MessageHandler(filters.CONTACT, handler.contact))
 
-app.run_polling()
+flask_app = Flask(__name__)
+
+
+@flask_app.route("/webhook", methods=["POST"])
+async def webhook():
+    update = Update.de_json(request.get_json(), bot.bot)
+    await bot.process_update(update)
+    return "ok"
+
+
+if __name__ == "__main__":
+    bot.run_webhook(
+        listen="0.0.0.0",
+        port=8000,
+        url_path="webhook",
+        webhook_url=f"{WEBHOOK_URL}/webhook",
+    )
