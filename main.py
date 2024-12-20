@@ -9,6 +9,7 @@ from telegram.ext import (
     filters,
 )
 import handler
+from webhook.setup import set_webhook
 
 load_dotenv()
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
@@ -32,6 +33,7 @@ async def webhook():
 
 
 if __name__ == "__main__":
+    set_webhook()
     bot.run_webhook(
         listen="0.0.0.0",
         port=8000,
