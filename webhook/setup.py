@@ -12,7 +12,6 @@ def set_webhook():
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/setWebhook"
     data = {
         "url": webhook_url,
-        "drop_pending_updates": True,
     }
     response = requests.post(url, json=data)
 
