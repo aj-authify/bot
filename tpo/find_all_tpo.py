@@ -1,10 +1,13 @@
 from datetime import datetime
 import mongodb
+import user
 
 
-async def get_valid_data(phone_number):
+async def get_valid_data():
     valid_documents = []
-    documents = mongodb.mongodb_data["collection"].find({"phone_number": phone_number})
+    documents = mongodb.mongodb_data["collection"].find(
+        {"phone_number": user.user_data["phone_number"]}
+    )
 
     for document in documents:
         if datetime.utcnow() <= document["expiresAt"]:
@@ -13,8 +16,8 @@ async def get_valid_data(phone_number):
     return valid_documents
 
 
-async def find_all_tpo(phone_number):
-    valid_documents = await get_valid_data(phone_number)
+async def find_all_tpo():
+    valid_documents = await get_valid_data()
 
     if not valid_documents:
         return {"ok": False, "message": "TPO not found for this phone number"}

@@ -1,13 +1,10 @@
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes
-import mongodb
 import tpo
 
 
-async def tpo_website_buttons(
-    phone_number, update: Update, context: ContextTypes.DEFAULT_TYPE
-):
-    tpo_data = await tpo.find_all_tpo(f"{phone_number}")
+async def tpo_website_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tpo_data = await tpo.find_all_tpo()
     if not tpo_data["ok"]:
         await update.message.reply_text(tpo_data["message"])
         return

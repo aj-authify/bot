@@ -3,11 +3,12 @@ import user
 
 
 async def find_tpo(website):
-    if not user.user_data["phone_number"]:
+    phone_number = user.user_data["phone_number"]
+    if not phone_number:
         return {"ok": False, "message": "Phone number not found. Please /verify first"}
 
     document = mongodb.mongodb_data["collection"].find_one(
-        {"phone_number": user.user_data["phone_number"], "website": website}
+        {"phone_number": phone_number, "website": website}
     )
 
     if not document:
