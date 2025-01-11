@@ -14,5 +14,5 @@ async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    user.user_data["phone_number"] = f"+{contact.phone_number}"
+    user.user_data["phone_number"] = contact.phone_number
     await tg_bot_utils.tpo_website_buttons(update, context)
